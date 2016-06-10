@@ -1,5 +1,5 @@
 # Tournament Planner
-Tournament Planner is a Python module that uses a PostgreSQL database to record player information, matches and the match outcomes.  The tournament format will use the Swiss system for match players in each round.  This tournament style will allow all participants to play in each round, pairing each match based on player records and standings.
+Tournament Planner is a Python module that uses a PostgreSQL database to record player information and match outcomes.  The tournament format will use the Swiss system to pair players in each round.  This tournament style will allow all participants to play in each round, pairing each match based on player records and standings.
 More information about the Swiss system tournament can be found [here](https://en.wikipedia.org/wiki/Swiss-system_tournament).
 
 ## Requirements to Run Module
@@ -13,14 +13,14 @@ More information about the Swiss system tournament can be found [here](https://e
 - tournament.py - Python module used to access the tournament database.  Includes functions to add, delete and query player inforamtion from the database.
 - tournament_test.py - Client program that will call functions in the tournament.py module.  The client program is written to test the functions in tournament.py
 
-## Running the Tournament Planner Module
-### Summary
-1. Building the Database Schema
+## Using the Tournament Planner Module
+### Summary Steps
+1. Build the Database Schema
 2. Execute the tournament_test.py file
 
 ### Building the Database Schema
 To build the database schema you will need to import the tournament.sql file.  The file will create a database named 'tournament' and the necessary tables and views to run the tournament.py module.
-**Use the following steps to import the database from the command line***
+**Use the following steps to import the database from the command line**
 1. From your terminal run `psql` to enter the psql CLI
 2. Run command `\i tournament.sql` to build the database
 3. Run command `\q` to exit the psql CLI
