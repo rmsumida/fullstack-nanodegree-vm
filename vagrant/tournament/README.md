@@ -20,7 +20,9 @@ More information about the Swiss system tournament can be found [here](https://e
 
 ### Building the Database Schema
 To build the database schema you will need to import the tournament.sql file.  The file will create a database named 'tournament' and the necessary tables and views to run the tournament.py module.
+
 **Use the following steps to import the database from the command line**
+
 1. From your terminal run `psql` to enter the psql CLI
 2. Run command `\i tournament.sql` to build the database
 3. Run command `\q` to exit the psql CLI
