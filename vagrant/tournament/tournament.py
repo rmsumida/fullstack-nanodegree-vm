@@ -46,13 +46,9 @@ def countPlayers():
     # SQL command to count the number of ids from the players table,
     # returned as an integer
     c.execute("SELECT count(players.id)::int AS num FROM players")
-    count = c.fetchall()
-    for row in count:
-        count = row[0]
+    count = c.fetchone()
     conn.close()
-    # print "print player count"
-    # print count
-    return count
+    return count[0]
 
 
 def registerPlayer(name):
