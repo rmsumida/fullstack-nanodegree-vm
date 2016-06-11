@@ -7,47 +7,47 @@ import psycopg2
 import bleach
 
 
-def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+# def connect():
+#     """Connect to the PostgreSQL database.  Returns a database connection."""
+#     return psycopg2.connect("dbname=tournament")
 
 
-# def connect(database_name="tournament"):
-#     try:
-#         db = psycopg2.connect("dbname={}".format(database_name))
-#         cursor = db.cursor()
-#         return db, cursor
-#     except:
-#         print("<error message>")
+def connect(database_name="tournament"):
+    try:
+        db = psycopg2.connect("dbname={}".format(database_name))
+        cursor = db.cursor()
+        return db, cursor
+    except:
+        print("<error message>")
 
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute("DELETE FROM matches")
-    conn.commit()
-    conn.close()
+    db, cursor = connect()
+    query = "DELETE FROM matches"
+    cursor.execute(query)
+    db.commit()
+    db.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute("DELETE FROM players")
-    conn.commit()
-    conn.close()
+    db, cursor = connect()
+    query = "DELETE FROM players"
+    cursor.execute(query)
+    db.commit()
+    db.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    conn = connect()
-    c = conn.cursor()
-    # SQL command to count the number of ids from the players table,
+    db, cursor = connect()
+    # SQL query to count the number of ids from the players table,
     # returned as an integer
-    c.execute("SELECT count(players.id)::int AS num FROM players")
-    count = c.fetchone()
-    conn.close()
+    query = "SELECT count(players.id)::int AS num FROM players"
+    cursor.execute(query)
+    count = cursor.fetchone()
+    db.close()
     return count[0]
 
 
@@ -60,28 +60,15 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    conn = connect()
-    c = conn.cursor()
+    db, cursor = connect()
     # Sanitize strings used in the 'name' variable
     # before inserting it into the database
     name = bleach.clean(name)
-    # SQL command to insert the variable 'name' into the players table.
-    # The player id will be autoincrement to the next integer
-    # when the row is inserted
-    c.execute("INSERT INTO players (name) VALUES (%s)", (name,))
-    conn.commit()
-    conn.close()
-
-
-# def registerPlayer(name):
-#     db, cursor = connect()
-
-#     query = "INSERT INTO players (name) VALUES (%s);"
-#     parameter = (name,)
-#     cursor.execute(query, parameter)
-
-#     db.commit()
-#     db.close()
+    query = "INSERT INTO players (name) VALUES (%s)"
+    parameter = (name,)
+    cursor.execute(query, parameter)
+    db.commit()
+    db.close()
 
 
 def playerStandings():
@@ -97,15 +84,13 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    conn = connect()
-    c = conn.cursor()
-    # SQL command to return a list of player ids, names, wins
-    # and number of matches played
-    # The matches_played view will be joined to get the total number
-    # of matches played for each player id
-    c.execute("SELECT * FROM player_standings")
-    standings = c.fetchall()
-    conn.close()
+    db, cursor = connect()
+    # SQL query to count the number of ids from the players table,
+    # returned as an integer
+    query = "SELECT * FROM player_standings"
+    cursor.execute(query)
+    standings = cursor.fetchall()
+    db.close()
     return standings
 
 
@@ -120,13 +105,13 @@ def reportMatch(winner, loser):
     # before inserting it into the database
     winner = bleach.clean(winner)
     loser = bleach.clean(loser)
-    conn = connect()
-    c = conn.cursor()
-    # SQL command to record the match winner and loser into the matches table
-    c.execute("INSERT INTO matches (id_winner, id_loser) VALUES (%s, %s)",
-              (winner, loser))
-    conn.commit()
-    conn.close()
+    db, cursor = connect()
+    # SQL query to record the match winner and loser into the matches table
+    query = "INSERT INTO matches (id_winner, id_loser) VALUES (%s, %s)"
+    parameter = (winner, loser)
+    cursor.execute(query, parameter)
+    db.commit()
+    db.close()
 
 
 def swissPairings():
@@ -144,11 +129,11 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    conn = connect()
-    c = conn.cursor()
+    db, cursor = connect()
     # Get table with id and name sorted by total wins in descending order
-    c.execute("SELECT id, name FROM wins ORDER BY wins DESC")
-    standings = c.fetchall()
+    query = ("SELECT id, name FROM wins")
+    cursor.execute(query)
+    standings = cursor.fetchall()
     # print 'Print standings'
     # print standings
     num_players = countPlayers()
@@ -168,5 +153,5 @@ def swissPairings():
         i += 2
     # print 'Print Pairings'
     # print pairings
+    db.close()
     return pairings
-    conn.close()
