@@ -103,9 +103,7 @@ def playerStandings():
     # and number of matches played
     # The matches_played view will be joined to get the total number
     # of matches played for each player id
-    c.execute("SELECT wins.id, wins.name, wins.wins, \
-        matches_played.played as matches FROM wins LEFT JOIN matches_played \
-        ON wins.id = matches_played.id ORDER BY wins DESC")
+    c.execute("SELECT * FROM player_standings")
     standings = c.fetchall()
     conn.close()
     return standings
