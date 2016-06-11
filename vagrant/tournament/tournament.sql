@@ -40,3 +40,7 @@ CREATE VIEW wins AS SELECT players.id::int,
 						FROM players LEFT JOIN matches
 						ON players.id = matches.id_winner
 						GROUP BY players.id;
+
+CREATE VIEW player_standings AS SELECT wins.id, wins.name, wins.wins, matches_played.played
+						AS matches FROM wins LEFT JOIN matches_played
+						ON wins.id = matches_played.id ORDER BY wins DESC
